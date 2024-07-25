@@ -1,25 +1,38 @@
-const { OpenAI } = require('openai'); // Note: Check if this import matches your package version
-
+const { OpenAI } = require('openai');
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const generateSummary = async (patientData) => {
-  const response = await openai.completions.create({
-    model: 'text-davinci-003',
-    prompt: `Generate a detailed summary for the following patient data:\n${JSON.stringify(patientData)}`,
-    max_tokens: 150,
-  });
-  return response.choices[0].text;
-};
+async function generateSummary(input) {
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo', // Updated model name
+      messages: [
+        { role: 'user', content: `Generate a summary for: ${input.medicalHistory}` },
+      ],
+      max_tokens: 150,
+    });
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('Error generating summary:', error);
+    throw error;
+  }
+}
 
-const generateRecommendations = async (patientData) => {
-  const response = await openai.completions.create({
-    model: 'text-davinci-003',
-    prompt: `Based on the following patient data, provide personalized recommendations for mental health and medication management:\n${JSON.stringify(patientData)}`,
-    max_tokens: 150,
-  });
-  return response.choices[0].text;
-};
+async function generateRecommendations(input) {
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo', // Updated model name
+      messages: [
+        { role: 'user', content: `Generate recommendations for: ${input.medicalHistory}` },
+      ],
+      max_tokens: 150,
+    });
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('Error generating recommendations:', error);
+    throw error;
+  }
+}
 
 module.exports = { generateSummary, generateRecommendations };
