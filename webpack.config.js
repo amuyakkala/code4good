@@ -26,6 +26,6 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     compress: true,
-    port: 3000, // Ensure this matches the port you're trying to access
+    port: 9000, // Ensure this matches the port you're trying to access
   },
 };
